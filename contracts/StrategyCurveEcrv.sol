@@ -142,9 +142,14 @@ contract StrategyCurveEcrv is BaseStrategy {
                 address(want),
                 Math.min(stakedBal, _amountNeeded - wantBal)
             );
+            
+            _liquidatedAmount = balanceOfWant().sub(wantBal);
+            
+            if(_liquidatedAmount < _amountNeeded){
+                _loss = _amountNeeded.sub(_liquidatedAmount);
+            }
         }
-
-        _liquidatedAmount = Math.min(_amountNeeded, balanceOfWant());
+        
         require(_liquidatedAmount + _loss == _amountNeeded);
     }
 
